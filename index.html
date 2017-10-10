@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Retimed</title>
+    <!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+   
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.css' rel='stylesheet' />
+        
+    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+   
+   
+  </head>
+  <body>
+  <div id='map'></div>
+
+<div class='map-overlay' id='features'><h2>Redtimed</h2>
+  <div id='address-title'></div>
+  <div id='address'></div>
+  <div id='assessland-title'></div>
+  <div id='assessland'></div>
+  <div id='ownername-title'></div>
+  <div id='ownername'></div>
+  <div id='units-title'></div>
+  <div id='unitsres'></div>
+  <div id='year-title'></div>
+  <div id='yearbuilt'></div>
+</div>
+<div class='map-overlay' id='legend'>
+  
+</div>
+
+<script>
+
+// define access token
+mapboxgl.accessToken = 'pk.eyJ1Ijoicm9uLW1vcnJpc29uIiwiYSI6ImdwUzZMMU0ifQ.i3bqCbuOEpHDR-bQGhJkkg';
+
+//create map
+var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/ron-morrison/cj8g2gbwg0u8k2rugygo2bcp8' // map style URL from Mapbox Studio
+});
+
+map.on('load', function(e) {
+  var popup = new mapboxgl.Popup({closeOnClick: false})
+    .setLngLat([-74, 40])
+    .setHTML('<h1>Hello World!</h1>')
+    .addTo(map);
+  
+  var layers = ['Best', 'Still Desirable', 'Definitely Declining', 'Hazardous'];
+  var colors = ['#33cc33', '#0066ff', '#ffff00', '#ff3300'];
+
+  for (i = 0; i < layers.length; i++) {
+    var layer = layers[i];
+    var color = colors[i];
+    var item = document.createElement('div');
+    var key = document.createElement('span');
+    key.className = 'legend-key';
+    key.style.backgroundColor = color;
+  
+    var value = document.createElement('span');
+    value.innerHTML = layer;
+    item.appendChild(key);
+    item.appendChild(value);
+    legend.appendChild(item);
+  }
+});
+
+map.on('click', function (e) {
+    var features = map.queryRenderedFeatures(e.point);
+    document.getElementById('address-title').innerHTML = `<strong>Address</strong>`;
+    document.getElementById('address').innerHTML = `<p>${features[0].properties.address}</p>`;
+    document.getElementById('assessland-title').innerHTML = `<strong>Assessed Value</strong>`;
+    document.getElementById('assessland').innerHTML = `<p>$${features[0].properties.assessland}</p>`;
+    document.getElementById('ownername-title').innerHTML = `<strong>Owner</strong>`;
+    document.getElementById('ownername').innerHTML = `<p>${features[0].properties.ownername}</p>`;
+    document.getElementById('year-title').innerHTML = `<strong>Year</strong>`;
+    document.getElementById('yearbuilt').innerHTML = `<p>${features[0].properties.yearbuilt}</p>`;
+    document.getElementById('units-title').innerHTML = `<strong>Units</strong>`;;
+    document.getElementById('unitsres').innerHTML = `<p>${features[0].properties.unitsres}</p>`;
+});
+
+</script>
+
+
+  </body>
+</html>
